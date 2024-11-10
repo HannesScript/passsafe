@@ -124,3 +124,26 @@ function get_all_passwords_servicename_sorted($uid) {
     ksort($passwords);
     return $passwords;
 }
+
+// Get user ID from email
+function get_uid_from_email($useremail) {
+    global $db_users;
+    $index_file = "{$db_users}email_index.json";
+
+    // Build index if it doesn't exist
+    if (!file_exists($index_file)) {
+        $user_files = glob("{$db_users}u_*.json");
+        $email_index = [];
+        foreach ($user_files as $user_file) {
+            $user = json_decode(file_get_contents($user_file), true);
+            if ($user['useremail']) {
+                $email_index[$user['useremail']] = $user['uid'];
+            }
+        }
+        file_put_contents($index_file, json_encode($email_index));
+    } else {
+        $email_index = json_decode(file_get_contents($index_file), true);
+    }
+
+    return $email_index[$useremail] ?? null;
+}

@@ -23,7 +23,20 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Psr7\Factory\StreamFactory;
 use Slim\Factory\AppFactory;
 
+// CORS Headers
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS, DELETE, PUT");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
+// OPTIONS-Anfragen behandeln (wichtig für CORS-Preflight)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
+    exit();
+}
+
+
 $app = AppFactory::create();
+$app->setBasePath('/backend/passsafe');
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
 $app->addErrorMiddleware(true, true, true);
@@ -121,6 +134,13 @@ $app->get("/getpassword", function (Request $request, Response $response) {
         return $response;
     }
     $response->getBody()->write(json_encode($password));
+    return $response->withHeader('Content-Type', 'application/json');
+});
+
+$app->get("/uidbyemail", function (Request $request, Response $response) {
+    $email = $request->getQueryParams()['email'];
+    $uid = get_uid_from_email($email);
+    $response->getBody()->write(json_encode($uid));
     return $response->withHeader('Content-Type', 'application/json');
 });
 
