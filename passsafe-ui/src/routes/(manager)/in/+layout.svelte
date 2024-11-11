@@ -1,4 +1,5 @@
 <script lang="ts">
+    let whref = window.location.pathname;
 </script>
   
 
@@ -10,13 +11,13 @@
 </main>
 
 <footer>
-    <a href="/pws">
+    <a href="/in/pws" class={whref == "/in/pws" ? "selected" : ""}>
         <span class="material-symbols-outlined">
             key
         </span>
         <span>Passwords</span>
     </a>
-    <a href="/acc">
+    <a href="/in/acc" class={whref == "/in/acc" ? "selected" : ""}>
         <span class="material-symbols-outlined">
             person
         </span>
@@ -46,6 +47,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        z-index: 100;
     }
 
     footer a {

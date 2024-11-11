@@ -1,5 +1,8 @@
 <script lang="ts">
     import { invoke } from "@tauri-apps/api/core"
+    import { goto } from '$app/navigation';
+
+    goto(`/in`, { replaceState: true }) 
 
     let isCreatingAccount = false;
 
@@ -33,7 +36,7 @@
         
 
         if (response.status === 201 || response.status === 200) {
-            alert('Account created successfully');
+            goto(`/in`, { replaceState: true }) 
         } else {
             alert('An error occurred');
         }
@@ -52,7 +55,7 @@
         // await invoke('storekey', { key });
 
         if (response.status === 200 || response.status === 201) {
-            alert('Logged in successfully');
+            goto(`/in`, { replaceState: true }) 
         } else {
             alert('An error occurred');
         }
