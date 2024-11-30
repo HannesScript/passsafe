@@ -1,8 +1,8 @@
 <script lang="ts">
     import { invoke } from "@tauri-apps/api/core"
     import { goto } from '$app/navigation';
-
-    goto(`/in`, { replaceState: true }) 
+	import { loginUser, registerUser } from "$lib/api";
+	import { onMount } from "svelte";
 
     let isCreatingAccount = false;
 
@@ -16,24 +16,15 @@
             return;
         }
 
-        const response = await fetch('https://cycoran.com/backend/passsafe/createuser', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email,
-                data: {}
-            })
-        });
+        const response = await registerUser(email, password);
 
         const uidstr = await response.text();
 
-        let key = await invoke('loginas', { email, password, uid: uidstr });
-        console.log(key);
-        
-        // await invoke('storekey', { key });
-        
+        let key: string = await invoke('loginas', { email, password, uid: uidstr });        
+
+        // Store key and UID in local storage
+        localStorage.setItem('key', key);
+        localStorage.setItem('uid', uidstr);
 
         if (response.status === 201 || response.status === 200) {
             goto(`/in`, { replaceState: true }) 
@@ -46,13 +37,14 @@
         const email = (document.getElementById('email') as HTMLInputElement).value;
         const password = (document.getElementById('password') as HTMLInputElement).value;
 
-        const response = await fetch(`https://cycoran.com/backend/passsafe/uidbyemail?email=${email}`, {
-            method: 'GET'
-        });
+        const response = await loginUser(email);
 
         const uidstr = await response.text();
-        let key = await invoke('loginas', { email, password, uidstr });
-        // await invoke('storekey', { key });
+        let key: string = await invoke('loginas', { email, password, uidstr });
+        
+        // Store key and UID in local storage
+        localStorage.setItem('key', key);
+        localStorage.setItem('uid', uidstr);
 
         if (response.status === 200 || response.status === 201) {
             goto(`/in`, { replaceState: true }) 
@@ -60,6 +52,12 @@
             alert('An error occurred');
         }
     }
+
+    onMount(async () => {
+        if(localStorage.getItem('key') && localStorage.getItem('uid')) {
+            goto(`/in`, { replaceState: true }) 
+        }
+    });
 </script>
 
 <div class="main-div-login">

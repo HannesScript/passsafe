@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 
 $app = AppFactory::create();
-$app->setBasePath('/backend/passsafe');
+$app->setBasePath('/backend/passsafe/');
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
 $app->addErrorMiddleware(true, true, true);
