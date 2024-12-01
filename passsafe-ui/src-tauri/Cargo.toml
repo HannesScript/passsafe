@@ -23,7 +23,4 @@ serde = { version = "1.0", features = ["derive"] }
 log = "0.4"
 tauri = { version = "2.1.0", features = [] }
 tauri-plugin-log = "2.0.0-rc"
-aes = "0.7"
-rand = "0.8"
-block-modes = "0.8"
 sha2 = "0.9"

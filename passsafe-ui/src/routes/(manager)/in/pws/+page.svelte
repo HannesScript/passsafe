@@ -77,6 +77,7 @@
 		flex: -2;
 		width: 0;
 		padding-left: 3rem;
+		overflow-x: hidden;
 		/* Scrollable */
 		overflow-y: scroll;
 	}
